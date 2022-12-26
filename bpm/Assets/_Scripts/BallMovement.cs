@@ -28,8 +28,6 @@ public class BallMovement : MonoBehaviour {
         rigid.mass = 3f;
         isGrounded = false;
         velocity = Vector3.zero;
-
-        //Physics.gravity = new Vector3(0,-10.0f,0);
     }
 
     private void Update() {

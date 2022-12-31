@@ -6,6 +6,7 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused = false;
     public GameObject pauseMenuUI;
+    public GameObject inGameUi;
     public FirstPersonLook firstPersonLook;
     // Update is called once per frame
     void Start(){
@@ -25,6 +26,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume(){
         pauseMenuUI.SetActive(false);
+        inGameUi.SetActive(true);
         Time.timeScale = 1f;
         gameIsPaused = false;
         this.firstPersonLook.mouseLookEnabled = true;
@@ -33,6 +35,7 @@ public class PauseMenu : MonoBehaviour
 
     void Pause(){
         pauseMenuUI.SetActive(true);
+        inGameUi.SetActive(false);
         Time.timeScale = 0f;
         gameIsPaused = true;
         this.firstPersonLook.mouseLookEnabled = false;

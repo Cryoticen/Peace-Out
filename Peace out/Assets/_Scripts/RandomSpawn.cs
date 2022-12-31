@@ -47,6 +47,7 @@ public class RandomSpawn : MonoBehaviour
     List<GameObject> LLWScrolls = new List<GameObject>();
     List<GameObject> LWJScrolls = new List<GameObject>();
     List<GameObject> ULWScrolls = new List<GameObject>();
+    bool startOfGame = true;
 
     // Start is called before the first frame update
     void Start()
@@ -88,13 +89,22 @@ public class RandomSpawn : MonoBehaviour
         ULWScrolls.Add(UpperLeftWingScroll6);
         ULWScrolls.Add(UpperLeftWingScroll7);
         ULWScrolls.Add(UpperLeftWingScroll8);
+    }
+
+    void Update(){
+        if(startScroll == null & startOfGame){
+            spawnScrolls();
+            startOfGame = false;
+        }
+    }
+
+    void spawnScrolls(){
         pickMHScrolls();
         pickRWScrolls();
         pickRWJScrolls();
         pickLLWScrolls();
         pickLWJScrolls();
         pickULWScrolls();
-
     }
 
     void pickMHScrolls(){

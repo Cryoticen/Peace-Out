@@ -1064,11 +1064,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Peace Out is a classic horror ind\u03B9e game with a simple but polular
-    concept. \nYour interaction key is E.\nCollect all 20 scrolls and leave before
-    the monster gets you. The scrolls are hidden in various spots around the castle
-    and once you find them, return to where you spawned and leave through the door.
-    Remember the game gets progressively harder as you collect scrolls. \nHave fun!"
+  m_text: "Peace Out is a classic horror indie game with a simple but polular concept.
+    \nYour interaction key is E. The game begins once you pick up the scroll on the
+    starting desk.\nCollect all 20 scrolls and leave before the monster gets you.
+    The scrolls are hidden in various spots around the castle and once you find them,
+    return to where you spawned and leave through the door. Remember, the game gets
+    progressively harder as you collect scrolls. \nHave fun!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

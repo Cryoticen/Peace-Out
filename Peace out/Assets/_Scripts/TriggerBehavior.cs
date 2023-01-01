@@ -13,14 +13,15 @@ public class ScrollCounter : MonoBehaviour
     public TextMeshProUGUI myScore;
     public TextMeshProUGUI peaceOut;
     bool keypressed = false;
+    public AudioClip gameEnd;
+    public AudioClip collectSound;
 
-    void Start(){
+    void Start(){ 
         ScoreText.text = "Scrolls:";
         myScore.text = scrollCount.ToString();
         peaceOut.enabled = false;
         peaceOut.text = "It's time to Peace Out of here!";
-
-
+        
     }
 
     void Update(){
@@ -40,10 +41,12 @@ public class ScrollCounter : MonoBehaviour
         if(other.tag == "Scrolls" && keypressed){
                 scrollCount++;
                 Debug.Log(scrollCount);
+                AudioSource.PlayClipAtPoint(collectSound, transform.position);
                 Destroy(other.gameObject);
         }
         if(other.tag == "Finish" && scrollCount >= scrollToWin & keypressed){
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            AudioSource.PlayClipAtPoint(gameEnd, transform.position);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         keypressed = false;
     }

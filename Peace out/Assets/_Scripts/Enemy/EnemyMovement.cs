@@ -29,33 +29,33 @@ public class EnemyMovement : MonoBehaviour
     }
 
 
-    void FixedUpdate()
-    {
-        //if (state == "wandering") Wonder();
-        //if (state == "hunting") Hunt();
+    void FixedUpdate() {
+        if (state == "wandering") Wonder();
+        if (state == "hunting") Hunt();
 
-        
+
     }
 
-    //private void Wonder() {
-    //    if (agent.destination == transform.position || agent.destination == player.position) {
-    //        agent.SetDestination(randomLocations[Random.Range(0, randomLocations.Count)]);
-    //        print("wondering");
-    //    }
+    private void Wonder() {
+        if ((agent.destination.x == transform.position.x && agent.destination.z == transform.position.z) || 
+            (agent.destination.x == player.position.x && agent.destination.z == player.position.z)) {
+            agent.SetDestination(randomLocations[Random.Range(0, randomLocations.Count)]);
+            print("wondering");
+        }
 
 
-    //    Collider playerCollider = player.GetComponent<CapsuleCollider>();
-    //    RaycastHit hit;
-    //    if(Physics.Raycast(transform.position, (player.position - transform.position), out hit, 5)) {
-    //        if (hit.transform == player) {
-    //            state = "hunting";
-    //            print("found YOU");
-    //        }
-    //    }
-    //}
+        Collider playerCollider = player.GetComponent<CapsuleCollider>();
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, (player.position - transform.position), out hit, 60)) {
+            if (hit.transform == player) {
+                state = "hunting";
+                print("found YOU");
+            }
+        }
+    }
 
-    //private void Hunt() {
-    //    agent.SetDestination(player.position);
-    //    head.LookAt(player.GetChild(0).position);// When Chasing player, look at player
-    //}
+    private void Hunt() {
+        agent.SetDestination(player.position);
+        head.LookAt(player.GetChild(0).position);// When Chasing player, look at player
+    }
 }

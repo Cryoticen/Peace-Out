@@ -13,7 +13,6 @@ public class ScrollCounter : MonoBehaviour
     public TextMeshProUGUI myScore;
     public TextMeshProUGUI peaceOut;
     bool keypressed = false;
-    public AudioClip gameEnd;
     public AudioClip collectSound;
 
     void Start(){ 
@@ -45,7 +44,6 @@ public class ScrollCounter : MonoBehaviour
                 Destroy(other.gameObject);
         }
         if(other.tag == "Finish" && scrollCount >= scrollToWin & keypressed){
-            AudioSource.PlayClipAtPoint(gameEnd, transform.position);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         keypressed = false;

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class EndScreen : MonoBehaviour
 {
+
     void Start(){
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;

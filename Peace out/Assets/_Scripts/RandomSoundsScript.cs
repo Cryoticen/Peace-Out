@@ -6,7 +6,7 @@ public class RandomSoundsScript : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public AudioClip audio;
+    new public AudioClip audio;
     bool hasplayed = false;
     private void OnTriggerEnter(Collider other)
     {

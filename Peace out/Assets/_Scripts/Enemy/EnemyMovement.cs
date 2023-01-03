@@ -19,7 +19,10 @@ public class EnemyMovement : MonoBehaviour
                                                               new Vector3(-14, 1, -14),
                                                               new Vector3(-12, 1, 0),
                                                               new Vector3(-10, -1, -33),
-                                                              new Vector3(11, 1, -12)
+                                                              new Vector3(11, 1, -12),
+                                                              new Vector3(-5,0,-14),
+                                                              new Vector3(-3.4f,0,-0.3f),
+                                                              new Vector3(11.7f,0,-15.6f)
     };
 
     void Start() {

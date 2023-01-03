@@ -8,11 +8,10 @@ using UnityEngine.SceneManagement;
 public class ScrollCounter : MonoBehaviour
 {
     int scrollCount = 0;
-    int scrollToWin = 1;
+    public int scrollToWin = 1;
     public TextMeshProUGUI ScoreText;
     public TextMeshProUGUI myScore;
     public TextMeshProUGUI peaceOut;
-    bool keypressed = false;
     public AudioClip collectSound;
 
     void Start(){ 
@@ -30,22 +29,17 @@ public class ScrollCounter : MonoBehaviour
             ScoreText.enabled = false;
             myScore.enabled = false;
         }
-        if(Input.GetKeyDown(KeyCode.E)){
-            keypressed = true;
-            
-        }
     }
 
     void OnTriggerStay(Collider other){
-        if(other.tag == "Scrolls" && keypressed){
+        if(other.tag == "Scrolls" && Input.GetKeyDown(KeyCode.E)) {
                 scrollCount++;
                 Debug.Log(scrollCount);
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
                 Destroy(other.gameObject);
         }
-        if(other.tag == "Finish" && scrollCount >= scrollToWin & keypressed){
+        if(other.tag == "Finish" && scrollCount >= scrollToWin & Input.GetKeyDown(KeyCode.E)) {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
-        keypressed = false;
     }
 }

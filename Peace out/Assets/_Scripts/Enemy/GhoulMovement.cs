@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class GhoulMovement : MonoBehaviour {
+    private bool debug = false;
+
     public Transform player;
     public NavMeshAgent agent;
+    public GameObject inGameMusic; 
 
     //Field of View 
     public float radius;
@@ -13,26 +17,32 @@ public class GhoulMovement : MonoBehaviour {
     public LayerMask targetMask;
     public LayerMask obstructionMask;
 
-    public bool canSeePlayer;
+    public bool canSeePlayer = false;
+    public bool canHearPlayer = false;
     public float maxIdleTimer = 3;
     public float maxAlertWindowTimer = 1.5f;
     public float maxOutOfSiteTimer = 3;
-    public float huntingSpeed = 3.5f;
-    public float walkingSpeed = 2;
+    public float huntingSpeed = 4;
+    public float walkingSpeed = 1.3f;
+    public float investigatingSpeed = 2.1f;
 
-    new public AudioClip jumpscare;
-
+    public AudioClip jumpscare;
+    public AudioClip chaseAudio;
+    public AudioClip mainAudio;
+    
 
     private enum State {
         idle,
         wandering,
         hunting,
-        attacking
+        attacking,
+        investigate
     }
     private State state;
     private float idleTimer;
     private float alertWindowTimer;
     private float outOfSiteTimer;
+    private bool playingChaseAudio = false;
 
     private Animator animator;
     private List<Vector3> randomLocations = new List<Vector3> {
@@ -50,6 +60,8 @@ public class GhoulMovement : MonoBehaviour {
                                                               new Vector3(-3.4f,0,-0.3f),
                                                               new Vector3(11.7f,0,-15.6f)
     };
+
+    private int counter;
     
     void Start() {
         animator = GetComponentInChildren<Animator>();
@@ -62,6 +74,9 @@ public class GhoulMovement : MonoBehaviour {
         idleTimer = maxIdleTimer;
         alertWindowTimer = maxAlertWindowTimer;
         outOfSiteTimer = maxOutOfSiteTimer;
+
+        inGameMusic.GetComponent<AudioSource>().clip = mainAudio;
+        inGameMusic.GetComponent<AudioSource>().Play();
 
         StartCoroutine(FOVRoutine());
     }
@@ -76,16 +91,31 @@ public class GhoulMovement : MonoBehaviour {
 
 
     void Update() {
-        setAnimation(state);
-        if (state == State.idle) GhoulIdle();
-        if (state == State.wandering) {GhoulWander();agent.speed = walkingSpeed; }
-        if (state == State.hunting) {GhoulHunt(); agent.speed = huntingSpeed; }
-        if (state == State.attacking) { GhoulAttack(); }
-
-        if (Input.GetKeyDown(KeyCode.K)) {
-            setAnimation(State.attacking);
+        if (debug) {
+           //debug mode
+        }else {
+            audioManager();
+            setAnimation(state);
+            if (state == State.idle) GhoulIdle();
+            else if (state == State.wandering) { GhoulWander(); agent.speed = walkingSpeed; }
+            else if (state == State.hunting) { GhoulHunt(); agent.speed = huntingSpeed; }
+            else if (state == State.investigate) { GhoulInvestigate(); agent.speed = investigatingSpeed; }
         }
         
+    }
+
+    private void audioManager() {
+        if (state == State.hunting && !playingChaseAudio) {
+            inGameMusic.GetComponent<AudioSource>().clip = chaseAudio;
+            inGameMusic.GetComponent<AudioSource>().Play();
+            playingChaseAudio = true;
+        }
+        else if (state != State.hunting && playingChaseAudio) {
+            inGameMusic.GetComponent<AudioSource>().clip = mainAudio;
+            inGameMusic.GetComponent<AudioSource>().Play();
+            playingChaseAudio = false;
+            print(counter++);
+        }
     }
 
     private void GhoulIdle() {
@@ -102,17 +132,20 @@ public class GhoulMovement : MonoBehaviour {
 
             if(alertWindowTimer <= 0) {
                 agent.isStopped = false;
-                state = State.hunting;
+                state = State.wandering;
                 alertWindowTimer = maxAlertWindowTimer;
                 idleTimer = maxIdleTimer;
             }
+        }
+        else if (canHearPlayer) {
+            state = State.investigate;
+            alertWindowTimer = maxAlertWindowTimer;
+            idleTimer = maxIdleTimer;
         }
         else {
             idleTimer -= Time.deltaTime * radius / Vector3.Distance(transform.position, player.position) ;
         }
     }
-
-
 
     private void GhoulWander() {
 
@@ -131,26 +164,36 @@ public class GhoulMovement : MonoBehaviour {
                 idleTimer = maxIdleTimer;
             }
         }
+        else if (canHearPlayer) {
+            state = State.investigate;
+            alertWindowTimer = maxAlertWindowTimer;
+            idleTimer = maxIdleTimer;
+        }
+    }
+
+    private void GhoulInvestigate() {
+        if (canHearPlayer) {
+            agent.SetDestination(player.position);
+        }
+        if (DestinationReached()) {
+            state = State.wandering;
+            return;
+        }
+        if (canSeePlayer) {
+            state = State.hunting;
+        }
     }
 
     private void GhoulHunt() { 
         agent.SetDestination(player.position);
 
-        if (!canSeePlayer) {
-            outOfSiteTimer -= Time.deltaTime;
-        }
-        else {
-            outOfSiteTimer = maxOutOfSiteTimer;
-        }
+        if (!canSeePlayer) outOfSiteTimer -= Time.deltaTime;
+        else outOfSiteTimer = maxOutOfSiteTimer;
 
         if (outOfSiteTimer <= 0) {
             outOfSiteTimer = maxOutOfSiteTimer;
             state = State.wandering;
         }
-    }
-
-    private void GhoulAttack() {
-
     }
 
     private bool DestinationReached() {
@@ -173,6 +216,10 @@ public class GhoulMovement : MonoBehaviour {
         else if(state == State.attacking) {
             animator.SetTrigger("attackPlayer");
         }
+        else if (state == State.investigate && (animator.GetBool("isRunning") || !animator.GetBool("isWalking"))) {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", true);
+        }
     }
 
 
@@ -182,9 +229,12 @@ public class GhoulMovement : MonoBehaviour {
         if (rangeChecks.Length != 0) {
             Transform target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
             if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                if (distanceToTarget <= 1) {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+                }
 
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                     canSeePlayer = true;
@@ -193,6 +243,23 @@ public class GhoulMovement : MonoBehaviour {
             }
             else
                 canSeePlayer = false;
+
+            // Ghoul Hearing
+            //if (!canSeePlayer) {
+            //    if (player.GetComponent<FirstPersonMovement>().IsRunning) {
+            //        //if(distanceToTarget >= radius/2) {
+
+            //        //}
+            //        canHearPlayer = true;
+
+            //    }
+            //    else {
+            //        canHearPlayer = false;
+            //    }
+
+
+            //}
+
         }
         else if (canSeePlayer)
             canSeePlayer = false;

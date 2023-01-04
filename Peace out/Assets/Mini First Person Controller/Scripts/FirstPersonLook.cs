@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class FirstPersonLook : MonoBehaviour
 {
-    [SerializeField]
-    Transform character;
+    [SerializeField] Transform character;
     public float sensitivity = 2;
     public float smoothing = 1.5f;
     public bool mouseLookEnabled = false;
 
+
     Vector2 velocity;
     Vector2 frameVelocity;
 
-
+    private float max_fov;
+    private float min_fov;
     void Reset()
     {
         // Get the character from the FirstPersonMovement in parents.
@@ -40,6 +42,13 @@ public class FirstPersonLook : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         }else{
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        if (GetComponentInParent<FirstPersonMovement>().IsRunning) {
+            if (Camera.main.fieldOfView <= 67) Camera.main.fieldOfView += Time.deltaTime * 35;
+        }
+        else {
+            if (Camera.main.fieldOfView >= 60) Camera.main.fieldOfView -= Time.deltaTime * 50;
         }
     }
 }

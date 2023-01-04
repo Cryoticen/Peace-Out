@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public GameObject inGameUi;
     public FirstPersonLook firstPersonLook;
+    public GameObject inGameMusic;
     // Update is called once per frame
     void Start(){
         this.firstPersonLook.mouseLookEnabled = true;
@@ -30,7 +31,8 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         gameIsPaused = false;
         this.firstPersonLook.mouseLookEnabled = true;
-         Cursor.visible = false;
+        Cursor.visible = false;
+        inGameMusic.GetComponent<AudioSource>().Play();
     }
 
     void Pause(){
@@ -39,7 +41,8 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         gameIsPaused = true;
         this.firstPersonLook.mouseLookEnabled = false;
-         Cursor.visible = true;
+        Cursor.visible = true;
+        inGameMusic.GetComponent<AudioSource>().Pause();
     }
 
     public void Quit(){

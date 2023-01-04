@@ -32,7 +32,7 @@ public class ScrollCounter : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other){
-        if(other.tag == "Scrolls" && Input.GetKeyDown(KeyCode.E)) {
+        if (other.tag == "Scrolls" && Input.GetKeyDown(KeyCode.E)) {
                 scrollCount++;
                 Debug.Log(scrollCount);
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);

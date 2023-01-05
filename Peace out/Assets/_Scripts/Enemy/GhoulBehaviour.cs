@@ -241,8 +241,15 @@ public class GhoulBehaviour : MonoBehaviour {
     private void FieldOfViewCheck() {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
 
-        if (rangeChecks.Length != 0 && Mathf.Abs(transform.position.y - player.position.y + 1.488f) <= 3) {
-            Transform target = rangeChecks[0].transform;
+        if (rangeChecks.Length != 0 && Mathf.Abs(transform.position.y - player.position.y) + 1.488f <= 3) {
+            Transform target = null;
+            foreach (Collider collider in rangeChecks) {
+                if(collider.gameObject.tag == "Player") {
+                    target = collider.transform;
+                }
+            }
+            if (target == null) return;
+
             Vector3 directionToTarget = (new Vector3(target.position.x, target.position.y + 1.488f, target.position.z) - transform.position).normalized;
             float distanceToTarget = Vector3.Distance(transform.position, new Vector3(target.position.x, target.position.y + 1.488f, target.position.z));
 

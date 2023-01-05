@@ -16,10 +16,7 @@ public class RandomSoundsScript : MonoBehaviour
                 AudioSource.PlayClipAtPoint(audio, transform.position);
                 hasplayed = true;
             }
-            
-            
+            gameObject.SetActive(false);
         }
     }
-
-
 }

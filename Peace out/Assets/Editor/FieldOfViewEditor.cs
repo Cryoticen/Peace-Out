@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GhoulMovement))]
+[CustomEditor(typeof(GhoulBehaviour))]
 public class GhoulMovementEditor : Editor {
     private void OnSceneGUI() {
-        GhoulMovement fov = (GhoulMovement)target;
+        GhoulBehaviour fov = (GhoulBehaviour)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360, fov.radius);
 
@@ -17,7 +17,7 @@ public class GhoulMovementEditor : Editor {
 
         if (fov.canSeePlayer) {
             Handles.color = Color.green;
-            Handles.DrawLine(fov.transform.position, fov.player.transform.position);
+            Handles.DrawLine(fov.transform.position, new Vector3(fov.player.transform.position.x, fov.player.transform.position.y + 1.488f, fov.player.transform.position.z) );
         }
     }
 

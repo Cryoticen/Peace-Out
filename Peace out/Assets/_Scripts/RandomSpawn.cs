@@ -49,6 +49,10 @@ public class RandomSpawn : MonoBehaviour
     List<GameObject> ULWScrolls = new List<GameObject>();
     bool startOfGame = true;
 
+    // Enemy
+    public GameObject ghoul_spawn_1;
+    public GameObject ghoul_spawn_2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -95,7 +99,12 @@ public class RandomSpawn : MonoBehaviour
         if(startScroll == null & startOfGame){
             spawnScrolls();
             startOfGame = false;
+
+            if (Random.Range(0, 2) == 0) ghoul_spawn_1.SetActive(true);
+            else ghoul_spawn_2.SetActive(true);
         }
+
+        
     }
 
     void spawnScrolls(){

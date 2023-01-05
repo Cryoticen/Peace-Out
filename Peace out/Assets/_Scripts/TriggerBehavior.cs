@@ -19,7 +19,6 @@ public class ScrollCounter : MonoBehaviour
         myScore.text = scrollCount.ToString();
         peaceOut.enabled = false;
         peaceOut.text = "It's time to Peace Out of here!";
-        
     }
 
     void Update(){
@@ -34,7 +33,6 @@ public class ScrollCounter : MonoBehaviour
     void OnTriggerStay(Collider other){
         if (other.tag == "Scrolls" && Input.GetKeyDown(KeyCode.E)) {
                 scrollCount++;
-                Debug.Log(scrollCount);
                 AudioSource.PlayClipAtPoint(collectSound, transform.position);
                 Destroy(other.gameObject);
         }

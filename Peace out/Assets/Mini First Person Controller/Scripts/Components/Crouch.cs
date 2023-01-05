@@ -52,22 +52,18 @@ public class Crouch : MonoBehaviour
             }
 
             // Enforce a low colliderToLower.
-            if (colliderToLower)
-            {
+            if (colliderToLower) {
                 // If we don't have the defaultColliderHeight, get it now.
-                if (!defaultColliderHeight.HasValue)
-                {
+                if (!defaultColliderHeight.HasValue) {
                     defaultColliderHeight = colliderToLower.height;
                 }
 
                 // Get lowering amount.
                 float loweringAmount;
-                if(defaultHeadYLocalPosition.HasValue)
-                {
+                if (defaultHeadYLocalPosition.HasValue) {
                     loweringAmount = defaultHeadYLocalPosition.Value - crouchYHeadPosition;
                 }
-                else
-                {
+                else {
                     loweringAmount = defaultColliderHeight.Value * .5f;
                 }
 
@@ -77,8 +73,7 @@ public class Crouch : MonoBehaviour
             }
 
             // Set IsCrouched state.
-            if (!IsCrouched)
-            {
+            if (!IsCrouched) {
                 IsCrouched = true;
                 SetSpeedOverrideActive(true);
                 CrouchStart?.Invoke();
@@ -95,8 +90,7 @@ public class Crouch : MonoBehaviour
                 }
 
                 // Reset the colliderToLower's height.
-                if (colliderToLower)
-                {
+                if (colliderToLower) {
                     colliderToLower.height = defaultColliderHeight.Value;
                     colliderToLower.center = Vector3.up * colliderToLower.height * .5f;
                 }

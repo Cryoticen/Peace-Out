@@ -20,6 +20,7 @@ public class GhoulBehaviour : MonoBehaviour {
     public bool canHearPlayer = false;
     public float maxIdleTimer = 3;
     public float maxAlertWindowTimer = 1.5f;
+    public float maxTenTo14Timer = 45;
     public float maxOutOfSiteTimer = 3;
     public float maxInvestigatingSpeed = 2.1f;
 
@@ -45,6 +46,7 @@ public class GhoulBehaviour : MonoBehaviour {
     private float idleTimer;
     private float alertWindowTimer;
     private float outOfSiteTimer;
+    public float TenTo14Timer = 0;
     private bool playingChaseAudio = false;
 
     private Animator animator;
@@ -96,19 +98,43 @@ public class GhoulBehaviour : MonoBehaviour {
         }
     }
 
-
     void Update() {
-        if (debug) {
-           //debug mode
+        if (player.GetComponent<ScrollCounter>().scrollCount >= player.GetComponent<ScrollCounter>().scrollToWin) {
+            state = State.hunting;
+            agent.speed = 4.8f;
+            agent.SetDestination(player.position);
+            audioManager();
+            setAnimation(state);
         }else {
+            if(state != State.hunting && player.GetComponent<ScrollCounter>().scrollCount >= 10 && player.GetComponent<ScrollCounter>().scrollCount <= 14) {
+                if (TenTo14Timer <= 0) {
+                    agent.SetDestination(player.position);
+                    TenTo14Timer = maxTenTo14Timer * 2;
+                }
+                TenTo14Timer -= Time.deltaTime;
+            } 
+            else if (state != State.hunting && player.GetComponent<ScrollCounter>().scrollCount >= 15) {
+                if (TenTo14Timer <= 0) {
+                    agent.SetDestination(player.position);
+                    TenTo14Timer = maxTenTo14Timer;
+                }
+                TenTo14Timer -= Time.deltaTime;
+            }
             audioManager();
             setAnimation(state);
             if (state == State.idle) GhoulIdle();
-            else if (state == State.wandering) { GhoulWander(); agent.speed = walkingSpeed; }
-            else if (state == State.hunting) { GhoulHunt(); agent.speed = huntingSpeed; }
-            else if (state == State.investigate) { GhoulInvestigate(); agent.speed = investigatingSpeed; }
+            else if (state == State.wandering) {
+                if (player.GetComponent<ScrollCounter>().scrollCount >= 10 && player.GetComponent<ScrollCounter>().scrollCount <= 14) {
+                    agent.speed = walkingSpeed + 1;
+                } else if(player.GetComponent<ScrollCounter>().scrollCount >= 15) {
+                    agent.speed = walkingSpeed + 2;
+                }   
+                
+                GhoulWander(); 
+            }
+            else if (state == State.hunting) { agent.speed = huntingSpeed; GhoulHunt(); }
+            else if (state == State.investigate) { agent.speed = investigatingSpeed; GhoulInvestigate(); }
         }
-        
     }
 
     private void audioManager() {

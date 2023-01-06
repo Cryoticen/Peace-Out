@@ -35,14 +35,15 @@ public class GhoulBehaviour : MonoBehaviour {
     public AudioClip nearPlayerAudio;
 
 
-    private enum State {
+
+    public State state;
+    public enum State {
         idle,
         wandering,
         hunting,
         attacking,
         investigate
     }
-    private State state;
     private float idleTimer;
     private float alertWindowTimer;
     private float outOfSiteTimer;
@@ -69,8 +70,6 @@ public class GhoulBehaviour : MonoBehaviour {
                                                               new Vector3(2.9f,1.2f,-1.2f), // main room near table
                                                               new Vector3(0.8f,6.4f,3.5f), //main room central balcony
     };
-
-    private int counter;
     
     void Start() {
         animator = GetComponentInChildren<Animator>();
@@ -168,7 +167,7 @@ public class GhoulBehaviour : MonoBehaviour {
             idleTimer = maxIdleTimer;
         }
         else if (canSeePlayer) {
-            if (alertWindowTimer == maxAlertWindowTimer) AudioSource.PlayClipAtPoint(jumpscare, player.position);
+            //if (alertWindowTimer == maxAlertWindowTimer) AudioSource.PlayClipAtPoint(jumpscare, player.position);
             alertWindowTimer -= Time.deltaTime * radius / Vector3.Distance(transform.position, player.position);
 
             if(alertWindowTimer <= 0) {
@@ -195,7 +194,7 @@ public class GhoulBehaviour : MonoBehaviour {
             agent.SetDestination(randomLocations[Random.Range(0, randomLocations.Count)]);
         }
         if (canSeePlayer) {
-            //if (alertWindowTimer == maxAlertWindowTimer) AudioSource.PlayClipAtPoint(jumpscare, player.position);
+            if (alertWindowTimer == maxAlertWindowTimer) AudioSource.PlayClipAtPoint(jumpscare, player.position);
 
             alertWindowTimer -= Time.deltaTime * radius / Vector3.Distance(transform.position, player.position);
 
@@ -276,8 +275,8 @@ public class GhoulBehaviour : MonoBehaviour {
             }
             if (target == null) return;
 
-            Vector3 directionToTarget = (new Vector3(target.position.x, target.position.y + 1.488f, target.position.z) - transform.position).normalized;
-            float distanceToTarget = Vector3.Distance(transform.position, new Vector3(target.position.x, target.position.y + 1.488f, target.position.z));
+            Vector3 directionToTarget = (player.GetComponentInChildren<Camera>().transform.position - transform.position).normalized;
+            float distanceToTarget = Vector3.Distance(transform.position, player.GetComponentInChildren<Camera>().transform.position);
 
             if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
                 if (distanceToTarget <= 1) {

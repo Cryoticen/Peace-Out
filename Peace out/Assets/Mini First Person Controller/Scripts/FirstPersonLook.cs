@@ -44,7 +44,7 @@ public class FirstPersonLook : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (GetComponentInParent<FirstPersonMovement>().IsRunning) {
+        if (GetComponentInParent<FirstPersonMovement>().IsRunning && !GetComponentInParent<FirstPersonMovement>().isExhausted && !Input.GetKey(KeyCode.LeftControl)) {
             if (Camera.main.fieldOfView <= 67) Camera.main.fieldOfView += Time.deltaTime * 35;
         }
         else {

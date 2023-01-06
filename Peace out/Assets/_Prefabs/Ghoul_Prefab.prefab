@@ -1629,6 +1629,7 @@ GameObject:
   - component: {fileID: 1690519555664567511}
   - component: {fileID: 1874564615479235244}
   - component: {fileID: 9192780770371638425}
+  - component: {fileID: 4904893136881580043}
   m_Layer: 0
   m_Name: Ghoul_Prefab
   m_TagString: Untagged
@@ -1701,6 +1702,7 @@ MonoBehaviour:
   canHearPlayer: 0
   maxIdleTimer: 3
   maxAlertWindowTimer: 1.5
+  maxTenTo14Timer: 45
   maxOutOfSiteTimer: 4
   maxInvestigatingSpeed: 2.1
   huntingSpeed: 4
@@ -1711,6 +1713,8 @@ MonoBehaviour:
   chaseAudio: {fileID: 8300000, guid: 10546d9649879d14e8277d84c34d122e, type: 3}
   mainAudio: {fileID: 8300000, guid: 12768fe82e3081d428f4c017ea7ad12c, type: 3}
   nearPlayerAudio: {fileID: 0}
+  state: 0
+  TenTo14Timer: 0
 --- !u!135 &1690519555664567511
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1842,6 +1846,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blowOutCandle: {fileID: 8300000, guid: 9119c868b194ee140984c2f675c7eacf, type: 3}
   igniteTorch: {fileID: 8300000, guid: 0a87b0cfa3e278c4f8c26d5587a2dbce, type: 3}
+--- !u!114 &4904893136881580043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9032898769843517153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7188e12314bfae418bfb216d6f05b73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  huntingTimer: 0
+  hearingTimer: 0
+  huntingSound1: {fileID: 8300000, guid: 66ddddddd7ad1f04baed96fd0fd7c789, type: 3}
+  huntingSound2: {fileID: 8300000, guid: 49eb387e8d721ce40af9d9070fa0ebbb, type: 3}
+  huntingSound3: {fileID: 8300000, guid: e25ddda9e614cb943930770576fa4673, type: 3}
+  huntingSound4: {fileID: 8300000, guid: b724904c7b076dd40a8a1a503a2a7f8b, type: 3}
+  hunting_hearingSound: {fileID: 8300000, guid: d9819ad5d4b1be244a66c8cbdb0e7f8a, type: 3}
+  hearingSound: {fileID: 8300000, guid: 969ac322adc9f3243b03c7bc11b5fcc3, type: 3}
 --- !u!1 &9032929362467306755
 GameObject:
   m_ObjectHideFlags: 0

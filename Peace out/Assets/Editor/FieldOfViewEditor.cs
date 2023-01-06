@@ -17,7 +17,7 @@ public class GhoulMovementEditor : Editor {
 
         if (fov.canSeePlayer) {
             Handles.color = Color.green;
-            Handles.DrawLine(fov.transform.position, new Vector3(fov.player.transform.position.x, fov.player.transform.position.y + 1.488f, fov.player.transform.position.z) );
+            Handles.DrawLine(fov.transform.position, fov.player.GetComponentInChildren<Camera>().transform.position);
         }
     }
 

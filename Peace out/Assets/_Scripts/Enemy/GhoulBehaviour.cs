@@ -279,7 +279,7 @@ public class GhoulBehaviour : MonoBehaviour {
             float distanceToTarget = Vector3.Distance(transform.position, player.GetComponentInChildren<Camera>().transform.position);
 
             if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
-                if (distanceToTarget <= 1) {
+                if (distanceToTarget <= 1.6f) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
                 }
 

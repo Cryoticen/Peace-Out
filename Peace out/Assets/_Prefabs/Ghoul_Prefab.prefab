@@ -1662,7 +1662,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 9032898769843517153}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.6
+  m_Radius: 0.4
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1748,7 +1748,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1844,8 +1844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5dd5d2d0f9ae841befb51c23b4311c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blowOutCandle: {fileID: 8300000, guid: 9119c868b194ee140984c2f675c7eacf, type: 3}
   igniteTorch: {fileID: 8300000, guid: 0a87b0cfa3e278c4f8c26d5587a2dbce, type: 3}
+  player: {fileID: 0}
 --- !u!114 &4904893136881580043
 MonoBehaviour:
   m_ObjectHideFlags: 0

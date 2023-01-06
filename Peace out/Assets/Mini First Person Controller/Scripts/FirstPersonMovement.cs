@@ -31,12 +31,12 @@ public class FirstPersonMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Update IsRunning from input.
         IsRunning = canRun && Input.GetKey(runningKey);
+        if (GetComponentInParent<ScrollCounter>().scrollCount >= GetComponentInParent<ScrollCounter>().scrollToWin) stamina = 100;
 
         // Get targetMovingSpeed.
         float targetMovingSpeed;
-        if (IsRunning && !isExhausted) {
+        if (IsRunning && (!isExhausted)) {
             targetMovingSpeed = runSpeed;
             if(!Input.GetKey(KeyCode.LeftControl)) stamina -= Time.fixedDeltaTime;
         }
@@ -47,7 +47,7 @@ public class FirstPersonMovement : MonoBehaviour
             }
         }
 
-        if (stamina <= 0 && exhaustionTimer > 0) {
+        if (stamina <= 0 && exhaustionTimer > 0 ) {
             isExhausted = true;
             exhaustionTimer -= Time.fixedDeltaTime;
         }

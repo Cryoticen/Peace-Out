@@ -153,7 +153,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Walk
-  m_Speed: 1.45
+  m_Speed: 2.17
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 7762209091902584925}

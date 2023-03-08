@@ -47,7 +47,7 @@ public class GhoulBehaviour : MonoBehaviour {
     private float idleTimer;
     private float alertWindowTimer;
     private float outOfSiteTimer;
-    public float TenTo14Timer = 0;
+    private float TenTo14Timer = 0;
     private bool playingChaseAudio = false;
 
     private Animator animator;
@@ -107,14 +107,19 @@ public class GhoulBehaviour : MonoBehaviour {
         }else {
             if(state != State.hunting && player.GetComponent<ScrollCounter>().scrollCount >= 10 && player.GetComponent<ScrollCounter>().scrollCount <= 14) {
                 if (TenTo14Timer <= 0) {
-                    agent.SetDestination(player.position);
+                    if (Input.GetKey(KeyCode.LeftShift) && player.GetComponent<Rigidbody>().velocity.magnitude == 0){
+                        agent.SetDestination(player.position);
+                    }
                     TenTo14Timer = maxTenTo14Timer * 2;
                 }
                 TenTo14Timer -= Time.deltaTime;
             } 
             else if (state != State.hunting && player.GetComponent<ScrollCounter>().scrollCount >= 15) {
                 if (TenTo14Timer <= 0) {
-                    agent.SetDestination(player.position);
+                    if (Input.GetKey(KeyCode.LeftShift) && player.GetComponent<Rigidbody>().velocity.magnitude == 0)
+                    {
+                        agent.SetDestination(player.position);
+                    }
                     TenTo14Timer = maxTenTo14Timer;
                 }
                 TenTo14Timer -= Time.deltaTime;

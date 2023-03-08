@@ -5,7 +5,7 @@ public class FirstPersonMovement : MonoBehaviour
 {
     public float speed;
     public float maxStamina = 7;
-    public float maxExhaustionTimer = 7;
+    public float maxExhaustionTimer = 5;
     public bool isExhausted = false;
     public GameObject exhaustedText;
 

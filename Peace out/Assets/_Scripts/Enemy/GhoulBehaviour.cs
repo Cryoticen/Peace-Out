@@ -5,7 +5,6 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class GhoulBehaviour : MonoBehaviour {
-    private bool debug = false;
     public Transform player;
     public NavMeshAgent agent;
     public GameObject inGameMusic; 

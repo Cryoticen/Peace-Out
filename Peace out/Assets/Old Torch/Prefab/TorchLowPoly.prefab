@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2376095210657767689}
   - component: {fileID: 3592413220293989584}
   - component: {fileID: 3904488997454900459}
+  - component: {fileID: 5398939880468973944}
   m_Layer: 10
   m_Name: TorchLight
   m_TagString: Untagged
@@ -107,6 +108,21 @@ Halo:
     serializedVersion: 2
     rgba: 4288406783
   m_Size: 0
+--- !u!114 &5398939880468973944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665274601509742984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd4618b7fe00d4d49b13c9c78380f0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  light: {fileID: 0}
+  fluctiation: 0.2
+  flucSpeed: 2
 --- !u!1 &9092533823991991071
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +157,7 @@ Transform:
   - {fileID: 1142864672451224724}
   - {fileID: 2376095210657767689}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 10}
 --- !u!33 &4812976289834802688
 MeshFilter:

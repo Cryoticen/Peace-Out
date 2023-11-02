@@ -29,10 +29,12 @@ public class FirstPersonMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
     }
 
+
     void FixedUpdate()
     {
         IsRunning = canRun && Input.GetKey(runningKey);
         if (GetComponentInParent<ScrollCounter>().scrollCount >= GetComponentInParent<ScrollCounter>().scrollToWin) stamina = 100;
+        
 
         // Get targetMovingSpeed.
         float targetMovingSpeed;

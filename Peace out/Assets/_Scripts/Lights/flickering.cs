@@ -1,61 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class flickering : MonoBehaviour
 {
-    public new Light light;
-    public float fluctiation;
-    public float flucSpeed;
-    public float initialIntensity;
-    public float timer;
-    public bool isSteady;
+    Light myLight;
+    public float maxInterval = 1f;
+    public float maxIntensity = 2f;
+    public float minIntensity = 1.9f;
 
+    float targetIntensity;
+    float lastIntensity;
+    float interval;
+    float timer;
+    public float maxDisplacement = 0.007f;
+    Vector3 targetPosition;
+    Vector3 lastPosition;
+    Vector3 origin;
 
+    // Start is called before the first frame update
     void Start()
     {
-        if (light == null)
-        {
-            light = gameObject.GetComponent<Light>();
-        }
-        initialIntensity = light.intensity;
-        timer = Random.Range(1,4);
-        isSteady = true;
-
-        fluctiation = .2f;
-        flucSpeed = 2;
+        myLight = GetComponent<Light>();
+        origin = transform.position;
+        lastPosition = origin;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (isSteady)
+        timer += Time.deltaTime;
+        if (timer > interval)
         {
-            light.intensity = initialIntensity;
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-            }
-            else
-            {
-                isSteady = false;
-                timer = - Random.Range(1, 3);
-            }
+            lastIntensity = myLight.intensity;
+            targetIntensity = Random.Range(minIntensity, maxIntensity);
+            timer = 0;
+            interval = Random.Range(0, maxInterval);
+            targetPosition = origin + Random.insideUnitSphere * maxDisplacement;
+            lastPosition = myLight.transform.position;
         }
-        else
-        {
-            light.intensity = initialIntensity - Mathf.Abs(Mathf.Sin(Time.realtimeSinceStartup * Random.Range(1, 2)) * fluctiation);
-            if (timer < 0)
-            {
-                timer += Time.deltaTime;
-            }
-            else
-            {
-                isSteady = true;
-                timer = Random.Range(1, 4);
-            }
-        }
+        myLight.intensity = Mathf.Lerp(lastIntensity, targetIntensity, timer / interval);
+        myLight.transform.position = Vector3.Lerp(lastPosition, targetPosition, timer / interval);
     }
 }

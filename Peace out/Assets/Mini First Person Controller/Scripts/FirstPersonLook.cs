@@ -7,13 +7,15 @@ public class FirstPersonLook : MonoBehaviour
     public float sensitivity = 2;
     public float smoothing = 1.5f;
     public bool mouseLookEnabled = false;
-
+    public float maxDistanceFromHead = .2f;
 
     Vector2 velocity;
     Vector2 frameVelocity;
 
     private float max_fov;
     private float min_fov;
+    private float heightFromParent;
+
     void Reset()
     {
         // Get the character from the FirstPersonMovement in parents.
@@ -24,23 +26,40 @@ public class FirstPersonLook : MonoBehaviour
     {
         // Lock the mouse cursor to the game screen.
         Cursor.lockState = CursorLockMode.Locked;
+        heightFromParent = transform.position.y - transform.parent.transform.position.y;
     }
 
-    void Update()
-    {
-        if(this.mouseLookEnabled){
-             // Get smooth velocity.
-        Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
-        frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
-        velocity += frameVelocity;
-        velocity.y = Mathf.Clamp(velocity.y, -90, 90);
+    void Update(){
+        Vector3 headPosition = transform.parent.transform.position + new Vector3(0, heightFromParent, 0);
+        float distanceFromHead = headPosition.y - transform.position.y;
 
-        // Rotate camera up-down and controller left-right from velocity.
-        transform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
-        character.localRotation = Quaternion.AngleAxis(velocity.x, Vector3.up);
-        Cursor.lockState = CursorLockMode.Locked;
-        }else{
+        print(distanceFromHead);
+        if (Input.GetKey(KeyCode.Q) && distanceFromHead <= maxDistanceFromHead) {
+            transform.RotateAround(transform.parent.transform.position, new Vector3(0, 0, 1), 1f);
+
+        }
+        else if (Input.GetKey(KeyCode.E) && distanceFromHead <= maxDistanceFromHead) {
+            transform.RotateAround(transform.parent.transform.position, new Vector3(0, 0, -1), 1f);
+        }
+        else if(!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E)) {
+            transform.position = transform.parent.transform.position + new Vector3(0, this.heightFromParent, 0);
+        }
+
+        if (this.mouseLookEnabled){
+            // Get smooth velocity.
+            Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
+            frameVelocity = Vector2.Lerp(frameVelocity, rawFrameVelocity, 1 / smoothing);
+            velocity += frameVelocity;
+            velocity.y = Mathf.Clamp(velocity.y, -90, 90);
+
+            // Rotate camera up-down and controller left-right from velocity.
+            transform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
+            character.localRotation = Quaternion.AngleAxis(velocity.x, Vector3.up);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
             Cursor.lockState = CursorLockMode.None;
         }
 

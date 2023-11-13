@@ -17,7 +17,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 127
   m_IsActive: 1
 --- !u!4 &2376095210657767689
 Transform:
@@ -120,9 +120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4618b7fe00d4d49b13c9c78380f0a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  light: {fileID: 0}
-  fluctiation: 0.2
-  flucSpeed: 2
+  maxInterval: 1
+  maxIntensity: 2
+  minIntensity: 1.9
+  maxDisplacement: 0.007
 --- !u!1 &9092533823991991071
 GameObject:
   m_ObjectHideFlags: 0

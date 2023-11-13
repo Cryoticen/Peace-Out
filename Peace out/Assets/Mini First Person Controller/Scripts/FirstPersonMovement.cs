@@ -11,6 +11,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     [Header("Running")] public bool canRun = true;
     public bool IsRunning { get; private set; }
+    public bool isLeaning = false;
     public float runSpeed = 4.7f;
     public KeyCode runningKey = KeyCode.LeftShift;
 
@@ -20,8 +21,6 @@ public class FirstPersonMovement : MonoBehaviour
     public float exhaustionTimer = 5;
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
-    public bool isLeaning = false;
-
 
 
     void Awake(){

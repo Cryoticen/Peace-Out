@@ -4,10 +4,13 @@ using UnityEngine.AI;
 public class FirstPersonLook : MonoBehaviour
 {
     [SerializeField] Transform character;
+    [SerializeField] Component referencedScript;
+
     public float sensitivity = 2;
     public float smoothing = 1.5f;
     public bool mouseLookEnabled = false;
-    public float maxDistanceFromHead = .2f;
+    public float maxDistanceFromHead = .03f;
+    public SphereCollider headCollider;
 
     Vector2 velocity;
     Vector2 frameVelocity;
@@ -15,11 +18,14 @@ public class FirstPersonLook : MonoBehaviour
     private float max_fov;
     private float min_fov;
     private float heightFromParent;
+    private bool headIsBlocked = false;
+    private float yDistanceFromHead;
 
     void Reset()
     {
         // Get the character from the FirstPersonMovement in parents.
         character = GetComponentInParent<FirstPersonMovement>().transform;
+        headCollider = GetComponent<SphereCollider>();
     }
 
     void Start()
@@ -30,19 +36,22 @@ public class FirstPersonLook : MonoBehaviour
     }
 
     void Update(){
+        //if(headCollider.)
+
         Vector3 headPosition = transform.parent.transform.position + new Vector3(0, heightFromParent, 0);
-        float distanceFromHead = headPosition.y - transform.position.y;
+        yDistanceFromHead = headPosition.y - transform.position.y;
 
-        print(distanceFromHead);
-        if (Input.GetKey(KeyCode.Q) && distanceFromHead <= maxDistanceFromHead) {
-            transform.RotateAround(transform.parent.transform.position, new Vector3(0, 0, 1), 1f);
-
+        if (Input.GetKey(KeyCode.Q) && getAbleToLean()) {
+            transform.RotateAround(transform.parent.transform.position, transform.forward, 1f);
+            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
         }
-        else if (Input.GetKey(KeyCode.E) && distanceFromHead <= maxDistanceFromHead) {
-            transform.RotateAround(transform.parent.transform.position, new Vector3(0, 0, -1), 1f);
+        else if (Input.GetKey(KeyCode.E) && getAbleToLean()) {
+            transform.RotateAround(transform.parent.transform.position, -transform.forward, 1f);
+            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
         }
         else if(!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E)) {
             transform.position = transform.parent.transform.position + new Vector3(0, this.heightFromParent, 0);
+            GetComponentInParent<FirstPersonMovement>().isLeaning = false;
         }
 
         if (this.mouseLookEnabled){
@@ -63,11 +72,26 @@ public class FirstPersonLook : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (GetComponentInParent<FirstPersonMovement>().IsRunning && !GetComponentInParent<FirstPersonMovement>().isExhausted && !Input.GetKey(KeyCode.LeftControl)) {
+        if (GetComponentInParent<FirstPersonMovement>().IsRunning  && !GetComponentInParent<FirstPersonMovement>().isExhausted 
+                                                                   && !Input.GetKey(KeyCode.LeftControl)) {
             if (Camera.main.fieldOfView <= 67) Camera.main.fieldOfView += Time.deltaTime * 35;
         }
         else {
             if (Camera.main.fieldOfView >= 60) Camera.main.fieldOfView -= Time.deltaTime * 50;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        this.headIsBlocked = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        this.headIsBlocked = false;
+    }
+
+    private bool getAbleToLean()
+    {
+        return yDistanceFromHead <= maxDistanceFromHead && !headIsBlocked;
     }
 }

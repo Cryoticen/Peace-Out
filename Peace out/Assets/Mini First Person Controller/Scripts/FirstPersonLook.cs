@@ -10,7 +10,9 @@ public class FirstPersonLook : MonoBehaviour
     public float smoothing = 1.5f;
     public bool mouseLookEnabled = false;
     public float maxDistanceFromHead = .03f;
+    public float leaningSpeed = .3f;
     public SphereCollider headCollider;
+    public bool headIsColliding = false;
 
     Vector2 velocity;
     Vector2 frameVelocity;
@@ -36,25 +38,9 @@ public class FirstPersonLook : MonoBehaviour
     }
 
     void Update(){
-        //if(headCollider.)
+        lean();
 
-        Vector3 headPosition = transform.parent.transform.position + new Vector3(0, heightFromParent, 0);
-        yDistanceFromHead = headPosition.y - transform.position.y;
-
-        if (Input.GetKey(KeyCode.Q) && getAbleToLean()) {
-            transform.RotateAround(transform.parent.transform.position, transform.forward, 1f);
-            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
-        }
-        else if (Input.GetKey(KeyCode.E) && getAbleToLean()) {
-            transform.RotateAround(transform.parent.transform.position, -transform.forward, 1f);
-            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
-        }
-        else if(!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E)) {
-            transform.position = transform.parent.transform.position + new Vector3(0, this.heightFromParent, 0);
-            GetComponentInParent<FirstPersonMovement>().isLeaning = false;
-        }
-
-        if (this.mouseLookEnabled){
+        if (this.mouseLookEnabled) {
             // Get smooth velocity.
             Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
             Vector2 rawFrameVelocity = Vector2.Scale(mouseDelta, Vector2.one * sensitivity);
@@ -72,26 +58,49 @@ public class FirstPersonLook : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (GetComponentInParent<FirstPersonMovement>().IsRunning  && !GetComponentInParent<FirstPersonMovement>().isExhausted 
-                                                                   && !Input.GetKey(KeyCode.LeftControl)) {
+        if (GetComponentInParent<FirstPersonMovement>().IsRunning  && !GetComponentInParent<FirstPersonMovement>().isExhausted && !Input.GetKey(KeyCode.LeftControl)) {
             if (Camera.main.fieldOfView <= 67) Camera.main.fieldOfView += Time.deltaTime * 35;
         }
         else {
             if (Camera.main.fieldOfView >= 60) Camera.main.fieldOfView -= Time.deltaTime * 50;
         }
+
+        if (headIsColliding) {
+            Camera.main.nearClipPlane = 0.001f;
+        }
+        else {
+            Camera.main.nearClipPlane = 0.1f;
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
+    private void lean() {
+        Vector3 headPosition = transform.parent.transform.position + new Vector3(0, heightFromParent, 0);
+        yDistanceFromHead = headPosition.y - transform.position.y;
+
+        if (Input.GetKey(KeyCode.Q) && getAbleToLean()) {
+            transform.RotateAround(transform.parent.transform.position, transform.forward, leaningSpeed);
+            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
+        }
+        else if (Input.GetKey(KeyCode.E) && getAbleToLean()) {
+            transform.RotateAround(transform.parent.transform.position, -transform.forward, leaningSpeed);
+            GetComponentInParent<FirstPersonMovement>().isLeaning = true;
+        }
+        else if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E)) {
+            transform.position = transform.parent.transform.position + new Vector3(0, this.heightFromParent, 0);
+            GetComponentInParent<FirstPersonMovement>().isLeaning =  false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other){
         this.headIsBlocked = true;
+        headIsColliding = true;
     }
-    private void OnTriggerExit(Collider other)
-    {
+    private void OnTriggerExit(Collider other){
         this.headIsBlocked = false;
+        headIsColliding = false;
     }
 
-    private bool getAbleToLean()
-    {
+    private bool getAbleToLean(){
         return yDistanceFromHead <= maxDistanceFromHead && !headIsBlocked;
     }
 }

@@ -11,6 +11,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     [Header("Running")] public bool canRun = true;
     public bool IsRunning { get; private set; }
+    public bool isLeaning = false;
     public float runSpeed = 4.7f;
     public KeyCode runningKey = KeyCode.LeftShift;
 
@@ -22,16 +23,13 @@ public class FirstPersonMovement : MonoBehaviour
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
 
 
-
-    void Awake()
-    {
+    void Awake(){
         // Get the rigidbody on this.
         rigidbody = GetComponent<Rigidbody>();
     }
 
 
-    void FixedUpdate()
-    {
+    void FixedUpdate(){
         IsRunning = canRun && Input.GetKey(runningKey);
         if (GetComponentInParent<ScrollCounter>().scrollCount >= GetComponentInParent<ScrollCounter>().scrollToWin) stamina = 100;
         
@@ -67,8 +65,7 @@ public class FirstPersonMovement : MonoBehaviour
             exhaustedText.SetActive(false);
         }
 
-        if (speedOverrides.Count > 0)
-        {
+        if (speedOverrides.Count > 0){
             targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
         }
 
@@ -76,10 +73,19 @@ public class FirstPersonMovement : MonoBehaviour
         Vector2 targetVelocity =new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
 
         // Apply movement.
-        rigidbody.velocity = transform.rotation * new Vector3(targetVelocity.x, rigidbody.velocity.y, targetVelocity.y);
+        if (!isLeaning) {
+            rigidbody.velocity = transform.rotation * new Vector3(targetVelocity.x, rigidbody.velocity.y, targetVelocity.y);
+        }
+        else {
+            rigidbody.velocity = new Vector3(0, rigidbody.velocity.y, 0);
+        }
 
-        if(!Input.anyKey && rigidbody.velocity.x < 0.5 && rigidbody.velocity.z < 0.5){
+        if(!movementKeysPressed() && rigidbody.velocity.x < 0.5 && rigidbody.velocity.z < 0.5){
             rigidbody.velocity =new Vector3(0, rigidbody.velocity.y, 0);
         }
+    }
+
+    private bool movementKeysPressed() {
+        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
     }
 }
